@@ -1,7 +1,25 @@
 
 #Write a function for each piece type that takes two cooridinates and checks to see if it is a legal move
 
-
+def knight(sx,sy,fx,fy):
+    if((fx - sx) == 1 and (fy - sy) == 2):
+        return True
+    elif((fx - sx) == -1 and (fy - sy) == 2):
+        return True
+    elif((fx - sx) == -1 and (fy - sy) == -2):
+        return True
+    elif((fx - sx) == 1 and (fy - sy) == -2):
+        return True
+    elif((fx - sx) == 2 and (fy - sy) == 1):
+        return True
+    elif((fx - sx) == -2 and (fy - sy) == 1):
+        return True
+    elif((fx - sx) == -2 and (fy - sy) == -1):
+        return True
+    elif((fx - sx) == 2 and (fy - sy) == -1):
+        return True
+    else:
+        return False
 
 
 
