@@ -46,6 +46,8 @@ def pawn(sx, sy, fx, fy):
           return True
         else:
           return False
+    else:
+        return False
 
 def rook(sx, sy, fx, fy):
     if((fx - sx) > -7 and (fy- sy) == 0):
@@ -123,30 +125,32 @@ def main():
     
     #Take an input of which posistion piece you want to move
 
-        valid_input = False;
+        valid_input_in = False;
         #Check to see if position is valid i.e is on the board and had a piece there and piece is white piece
-        while(valid_input == False):
-            p1pieceX, plpieceY = [int(x) for x in input("Enter the coordinate of which piece you would like to move (in the form x,y):").split(',')]
-            print(p1pieceX, plpieceY)
-            p1piece = [p1pieceX, plpieceY]
+        while(valid_input_in == False):
+            p1pieceX_start, plpieceY_start = [int(x) for x in input("Enter the coordinate of which piece you would like to move (in the form x,y):").split(',')]
+            p1piece = [p1pieceX_start, plpieceY_start]
             if (p1piece[0] < 0 or p1piece[0] > 7):
                 print( "Invalid Move")
             elif (p1piece[1] < 0 or p1piece[1] > 7):
                 print( "Invalid Move")
             elif (cBoardData[p1piece[0]][p1piece[1]] == "   "):
                 print( "Invalid Move")
-##            elif(cBoardData[p1piece[0]][p1piece[1]][0] == "B"):
-##                print( "Invalid Move")
             else:
-                valid_input = True
+                valid_input_in = True
+
+        piece = cBoardData[p1pieceX_start][plpieceY_start]
+        #print(piece)
+
         
-        valid_input = False
+        
+        valid_input_out = False
     #Get input for where the player wants to move
         
         
-        while(valid_input == False):
-            p1moveX, plmoveY = [int(x) for x in input("Enter the coordinate of which place you would like to move to(in the form x,y):").split(',')]
-            plmove = [p1moveX, plmoveY]
+        while(valid_input_out == False):
+            p1moveX_finish, plmoveY_finish = [int(x) for x in input("Enter the coordinate of which place you would like to move to(in the form x,y):").split(',')]
+            plmove = [p1moveX_finish, plmoveY_finish]
             if (plmove[0] < 0 or plmove[0] > 7):
                 print( "Invalid Move")
             elif (plmove[1] < 0 or plmove[1] > 7):
@@ -154,14 +158,54 @@ def main():
             elif(cBoardData[plmove[0]][plmove[1]][0] == "W" or [plmove[1]][0] == "B"):
                 print( "Invalid Move")
             else:
-                valid_input = True
+                valid_input_out = True
 
+        #Checks the legality of the attempted move
 
-    #Move Piece in cBoardData
-        piece_to_move = cBoardData[p1pieceX][plpieceY]
-        cBoardData[p1pieceX][plpieceY] = "   "
-        cBoardData[p1moveX][plmoveY] = piece_to_move
-    #Draw board
+        can_the_piece_move = False
+
+        while can_the_piece_move == False:
+            if piece[1] == "R":
+                can_the_piece_move = rook(p1pieceX_start, plpieceY_start, p1moveX_finish, plmoveY_finish)
+                if can_the_piece_move == False:
+                    break
+            elif piece[1] == "B":
+                can_the_piece_move = bishop(p1pieceX_start, plpieceY_start, p1moveX_finish, plmoveY_finish)
+                if can_the_piece_move == False:
+                    break
+            elif piece[1] == "K" and piece[2] == "n":
+                can_the_piece_move = knight(p1pieceX_start, plpieceY_start, p1moveX_finish, plmoveY_finish)
+                if can_the_piece_move == False:
+                    break
+            elif piece[1] == "K" and piece[2] == "i":
+                can_the_piece_move = king(p1pieceX_start, plpieceY_start, p1moveX_finish, plmoveY_finish)
+                if can_the_piece_move == False:
+                    break
+            elif piece[1] == "P":
+                can_the_piece_move = pawn(p1pieceX_start, plpieceY_start, p1moveX_finish, plmoveY_finish)
+                if can_the_piece_move == False:
+                    break
+            elif piece[1] == "Q":
+                can_the_piece_move = queen(p1pieceX_start, plpieceY_start, p1moveX_finish, plmoveY_finish)
+                if can_the_piece_move == False:
+                    break
+            else:
+                print("Sorry, not sure what piece you're moving. Blame Ryan")
+
+        print(can_the_piece_move)
+            
+
+    #Move Piece in cBoardData if allowed
+
+        if can_the_piece_move == False:
+            print("\n\n\n Sorry! I don't think you can move like that. \n\n\n")
+        elif can_the_piece_move == True:
+            piece_to_move = cBoardData[p1pieceX_start][plpieceY_start]
+            cBoardData[p1pieceX_start][plpieceY_start] = "   "
+            cBoardData[p1moveX_finish][plmoveY_finish] = piece_to_move
+        else:
+            print("I don't know what the fuck else. If it's not true or false, what can it be?!?!")
+    #Draws board at start of loop
     
 
 main()
