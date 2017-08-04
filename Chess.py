@@ -72,7 +72,7 @@ def bishop(sx, sy, fx, fy):
         return False
 
 def queen(sx , sy, fx, fy):
-    # Boss Bitch
+    # Boss
     #if(((fy - sy) < 0) and ((fx - sx) == 0 or (fx - sx) ==
     pass
         
@@ -192,9 +192,11 @@ def main():
                 pass
                 
         if piece[1] == "B":
-           pass
+           #Still need to configure this. It's rather difficult.
+            pass
 
         if piece[1] == "Q":
+            #Still need to configire the Queen. She is tough.
             pass
 
 
@@ -205,13 +207,11 @@ def main():
         if is_whites_turn == True:
             if cBoardData[p1pieceX_start][plpieceY_start][0] == "W":
                 correct_color_moving = True
-                is_whites_turn = False
             else:
                 pass
         if is_whites_turn == False:
             if cBoardData[p1pieceX_start][plpieceY_start][0] == "B":
                 correct_color_moving = True
-                is_whites_turn = True
             else:
                 pass
             
@@ -266,6 +266,7 @@ def main():
             piece_to_move = cBoardData[p1pieceX_start][plpieceY_start]
             cBoardData[p1pieceX_start][plpieceY_start] = "   "
             cBoardData[p1moveX_finish][plmoveY_finish] = piece_to_move
+            is_whites_turn = not(is_whites_turn)
         else:
             print("Sorry. Something about that move just aint right")
     #Draws board at start of loop
