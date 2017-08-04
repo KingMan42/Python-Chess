@@ -1,3 +1,5 @@
+import os
+
 
 #Write a function for each piece type that takes two cooridinates and checks to see if it is a legal move
 
@@ -119,6 +121,7 @@ def start():
 def main():
     print("\t\t Welcome to Ryan and Daniel's Python Chess Game!\n")
     cBoardData = start()
+    is_whites_turn = True
     while(1):
         draw(cBoardData);
         
@@ -160,7 +163,62 @@ def main():
             else:
                 valid_input_out = True
 
-        #Checks the legality of the attempted move
+        #Checks if pieces are in the way.
+
+        blocked = False
+
+        if cBoardData[p1pieceX_start][plpieceY_start][1] == "R":
+            for x in range(0, abs((p1moveX_finish - p1pieceX_start) - 1)):
+                if cBoardData[p1pieceX_start + x][plpieceY_start][0] == "W" or cBoardData[p1pieceX_start + x][plpieceY_start][0] =="B":
+                    blocked = True
+                elif cBoardData[p1pieceX_start - x][plpieceY_start][0] == "W" or cBoardData[p1pieceX_start - x][plpieceY_start][0] =="B":
+                    blocked = True
+                else:
+                    pass
+            for x in range( 0, abs((plmoveY_finish - plpieceY_start) - 1)):
+                if cBoardData[p1pieceX_start][plpieceY_start + x][0] == "W" or cBoardData[p1pieceX_start][plpieceY_start + x][0] =="B":
+                    blocked = True
+                elif cBoardData[p1pieceX_start][plpieceY_start - x][0] == "W" or cBoardData[p1pieceX_start][plpieceY_start - x][0] =="B":
+                    blocked = True
+                else:
+                    pass
+                
+        if cBoardData[p1pieceX_start][plpieceY_start][1] == "P":
+            if cBoardData[p1pieceX_start][plpieceY_start + 1][0] != " " and is_whites_turn == True:
+                blocked = True
+            elif cBoardData[p1pieceX_start][plpieceY_start - 1][0] != " " and is_whites_turn == False:
+                blocked = True
+            else:
+                pass
+                
+        if piece[1] == "B":
+           pass
+
+        if piece[1] == "Q":
+            pass
+
+
+        #Checks is the right color is moving
+
+        correct_color_moving = False
+        
+        if is_whites_turn == True:
+            if cBoardData[p1pieceX_start][plpieceY_start][0] == "W":
+                correct_color_moving = True
+                is_whites_turn = False
+            else:
+                pass
+        if is_whites_turn == False:
+            if cBoardData[p1pieceX_start][plpieceY_start][0] == "B":
+                correct_color_moving = True
+                is_whites_turn = True
+            else:
+                pass
+            
+            
+                
+
+        #Checks the legality of the attempted move against the pieces mobility
 
         can_the_piece_move = False
 
@@ -192,19 +250,24 @@ def main():
             else:
                 print("Sorry, not sure what piece you're moving. Blame Ryan")
 
-        print(can_the_piece_move)
-            
+        
+
+                   
 
     #Move Piece in cBoardData if allowed
 
         if can_the_piece_move == False:
             print("\n\n\n Sorry! I don't think you can move like that. \n\n\n")
-        elif can_the_piece_move == True:
+        elif correct_color_moving == False:
+            print("Dude, it's not your turn")
+        elif blocked == True:
+            print("Sorry, you've got a piece in your way.")
+        elif can_the_piece_move == True and correct_color_moving == True and blocked == False:
             piece_to_move = cBoardData[p1pieceX_start][plpieceY_start]
             cBoardData[p1pieceX_start][plpieceY_start] = "   "
             cBoardData[p1moveX_finish][plmoveY_finish] = piece_to_move
         else:
-            print("I don't know what the fuck else. If it's not true or false, what can it be?!?!")
+            print("Sorry. Something about that move just aint right")
     #Draws board at start of loop
     
 
