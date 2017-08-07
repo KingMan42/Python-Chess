@@ -192,8 +192,25 @@ def main():
                 pass
                 
         if piece[1] == "B":
-           #Still need to configure this. It's rather difficult.
-            pass
+           if((p1moveX_finish - p1pieceX_start) > 0) and ((plmoveY_finish - plpieceY_start) > 0):
+               for space in range(1, (abs(p1moveX_finish - p1pieceX_start) - 1)):
+                   if cBoardData[p1pieceX_start + space][plpieceY_start + space][0] == "W" or cBoardData[p1pieceX_start + space][plpieceY_start + space][0] == "B":
+                       blocked = True
+           elif((p1moveX_finish - p1pieceX_start) > 0) and ((plmoveY_finish - plpieceY_start) < 0):
+               for space in range(1, (abs(p1moveX_finish - p1pieceX_start) - 1)):
+                   if cBoardData[p1pieceX_start + space][plpieceY_start - space][0] == "W" or cBoardData[p1pieceX_start + space][plpieceY_start - space][0] == "B":
+                       blocked = True
+           elif((p1moveX_finish - p1pieceX_start) < 0) and ((plmoveY_finish - plpieceY_start) > 0):
+               for space in range(1, (abs(p1moveX_finish - p1pieceX_start) - 1)):
+                   if cBoardData[p1pieceX_start - space][plpieceY_start + space][0] == "W" or cBoardData[p1pieceX_start - space][plpieceY_start + space][0] == "B":
+                       blocked = True
+           elif((p1moveX_finish - p1pieceX_start) < 0) and ((plmoveY_finish - plpieceY_start) < 0):
+               for space in range(1, (abs(p1moveX_finish - p1pieceX_start) - 1)):
+                   if cBoardData[p1pieceX_start - space][plpieceY_start - space][0] == "W" or cBoardData[p1pieceX_start - space][plpieceY_start - space][0] == "B":
+                       blocked = True
+           else:
+                pass
+                       
 
         if piece[1] == "Q":
             #Still need to configire the Queen. She is tough.
