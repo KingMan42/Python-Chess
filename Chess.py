@@ -39,15 +39,9 @@ def pawn(sx, sy, fx, fy):
     elif((sy) == 6 and (fy - sy) == -2)and ((fx - sx) == 0):
         return True
     elif(((fx- sx) == 1 and ((fy - sy) == 1 or (fy - sy) == -1))):
-        if cBoardData[fx][fy][0] == "W" or cBoardData[fx][fy][0] == "B":
           return True
-        else:
-          return False
     elif(((fx- sx) == -1 and ((fy - sy) == 1 or (fy - sy) == -1))):
-        if cBoardData[fx][fy][0] == "W" or cBoardData[fx][fy][0] == "B":
           return True
-        else:
-          return False
     else:
         return False
 
@@ -187,46 +181,48 @@ def main():
         blocked = False
 
         if piece[1] == "R":
-            if (abs(plmoveY_finish - plpieceY_start) > 0):
-                for x in range(0,(abs(p1moveX_finish - p1pieceX_start) - 1)):
+            if ((p1moveX_finish - p1pieceX_start) > 0 or (p1moveX_finish - p1pieceX_start < 0)):
+                for x in range(1,(abs(p1moveX_finish - p1pieceX_start))):
                     if cBoardData[p1pieceX_start + x][plpieceY_start][0] == "W" or cBoardData[p1pieceX_start + x][plpieceY_start][0] =="B":
                         blocked = True
                     elif cBoardData[p1pieceX_start - x][plpieceY_start][0] == "W" or cBoardData[p1pieceX_start - x][plpieceY_start][0] =="B":
                         blocked = True
-                    else:
-                        pass
-            elif (abs(p1moveX_finish - p1pieceX_start) > 0):
-                for x in range( 0,(abs(plmoveY_finish - plpieceY_start) - 1)):
-                    if cBoardData[p1pieceX_start][plpieceY_start + x][0] == "W" or cBoardData[p1pieceX_start][plpieceY_start + x][0] =="B":
-                        blocked = True
-                    elif cBoardData[p1pieceX_start][plpieceY_start - x][0] == "W" or cBoardData[p1pieceX_start][plpieceY_start - x][0] =="B":
-                        blocked = True
-                    else:
-                        pass
+            elif ((plmoveY_finish - plpieceY_start) > 0) or ((plmoveY_finish - plpieceY_start) < 0):
+                for x in range( 1,(abs(plmoveY_finish - plpieceY_start))):
+                    if ((plmoveY_finish - plpieceY_start) > 0):
+                        if cBoardData[p1pieceX_start][plpieceY_start + x][0] == "W" or cBoardData[p1pieceX_start][plpieceY_start + x][0] =="B":
+                            blocked = True
+                    elif ((plmoveY_finish - plpieceY_start) < 0): 
+                        if cBoardData[p1pieceX_start][plpieceY_start - x][0] == "W" or cBoardData[p1pieceX_start][plpieceY_start - x][0] =="B":
+                            blocked = True
                 
         if piece[1] == "P":
-            if cBoardData[p1pieceX_start][plpieceY_start + 1][0] != " " and is_whites_turn == True:
+            if cBoardData[p1pieceX_start][plpieceY_start + 1][0] != " " and is_whites_turn == True and plpieceY_start == 1:
                 blocked = True
-            elif cBoardData[p1pieceX_start][plpieceY_start - 1][0] != " " and is_whites_turn == False:
+            elif cBoardData[p1pieceX_start][plpieceY_start - 1][0] != " " and is_whites_turn == False and plpieceY_start == 6:
+                blocked = True
+            elif ((plmoveY_finish - plpieceY_start) > 0) and ((p1moveX_finish - p1pieceX_start) == 0) and cBoardData[p1pieceX_start][plpieceY_start + 1][0] != " ":
+                blocked = True
+            elif ((plmoveY_finish - plpieceY_start) < 0) and ((p1moveX_finish - p1pieceX_start) == 0) and cBoardData[p1pieceX_start][plpieceY_start - 1][0] != " ":
                 blocked = True
             else:
                 pass
                 
         if piece[1] == "B":
            if((p1moveX_finish - p1pieceX_start) > 0) and ((plmoveY_finish - plpieceY_start) > 0):
-               for space in range(1, (abs(p1moveX_finish - p1pieceX_start) - 1)):
+               for space in range(1, (abs(p1moveX_finish - p1pieceX_start))):
                    if cBoardData[p1pieceX_start + space][plpieceY_start + space][0] == "W" or cBoardData[p1pieceX_start + space][plpieceY_start + space][0] == "B":
                        blocked = True
            elif((p1moveX_finish - p1pieceX_start) > 0) and ((plmoveY_finish - plpieceY_start) < 0):
-               for space in range(1, (abs(p1moveX_finish - p1pieceX_start) - 1)):
+               for space in range(1, (abs(p1moveX_finish - p1pieceX_start))):
                    if cBoardData[p1pieceX_start + space][plpieceY_start - space][0] == "W" or cBoardData[p1pieceX_start + space][plpieceY_start - space][0] == "B":
                        blocked = True
            elif((p1moveX_finish - p1pieceX_start) < 0) and ((plmoveY_finish - plpieceY_start) > 0):
-               for space in range(1, (abs(p1moveX_finish - p1pieceX_start) - 1)):
+               for space in range(1, (abs(p1moveX_finish - p1pieceX_start))):
                    if cBoardData[p1pieceX_start - space][plpieceY_start + space][0] == "W" or cBoardData[p1pieceX_start - space][plpieceY_start + space][0] == "B":
                        blocked = True
            elif((p1moveX_finish - p1pieceX_start) < 0) and ((plmoveY_finish - plpieceY_start) < 0):
-               for space in range(1, (abs(p1moveX_finish - p1pieceX_start) - 1)):
+               for space in range(1, (abs(p1moveX_finish - p1pieceX_start))):
                    if cBoardData[p1pieceX_start - space][plpieceY_start - space][0] == "W" or cBoardData[p1pieceX_start - space][plpieceY_start - space][0] == "B":
                        blocked = True
            else:
@@ -235,38 +231,38 @@ def main():
 
         if piece[1] == "Q":
             if ((p1moveX_finish - p1pieceX_start) == 0) or ((plmoveY_finish - plpieceY_start) == 0):
-                if (abs(plmoveY_finish - plpieceY_start) > 0):
-                    for x in range(0,(abs(p1moveX_finish - p1pieceX_start) - 1)):
+                if ((p1moveX_finish - p1pieceX_start) > 0 or (p1moveX_finish - p1pieceX_start < 0)):
+                    for x in range(1,(abs(p1moveX_finish - p1pieceX_start))):
                         if cBoardData[p1pieceX_start + x][plpieceY_start][0] == "W" or cBoardData[p1pieceX_start + x][plpieceY_start][0] =="B":
                             blocked = True
                         elif cBoardData[p1pieceX_start - x][plpieceY_start][0] == "W" or cBoardData[p1pieceX_start - x][plpieceY_start][0] =="B":
                             blocked = True
-                        else:
-                            pass
-                elif (abs(p1moveX_finish - p1pieceX_start) > 0):
-                    for x in range( 0,(abs(plmoveY_finish - plpieceY_start) - 1)):
-                        if cBoardData[p1pieceX_start][plpieceY_start + x][0] == "W" or cBoardData[p1pieceX_start][plpieceY_start + x][0] =="B":
-                            blocked = True
-                        elif cBoardData[p1pieceX_start][plpieceY_start - x][0] == "W" or cBoardData[p1pieceX_start][plpieceY_start - x][0] =="B":
-                            blocked = True
-                        else:
-                            pass
+                elif ((plmoveY_finish - plpieceY_start) > 0) or ((plmoveY_finish - plpieceY_start) < 0):
+                    for x in range( 1,(abs(plmoveY_finish - plpieceY_start))):
+                        if ((plmoveY_finish - plpieceY_start) > 0):
+                            if cBoardData[p1pieceX_start][plpieceY_start + x][0] == "W" or cBoardData[p1pieceX_start][plpieceY_start + x][0] =="B":
+                                print(x)
+                                blocked = True
+                        elif ((plmoveY_finish - plpieceY_start) < 0): 
+                            if cBoardData[p1pieceX_start][plpieceY_start - x][0] == "W" or cBoardData[p1pieceX_start][plpieceY_start - x][0] =="B":
+                                print(x)
+                                blocked = True
                 
             if (abs(p1moveX_finish - p1pieceX_start) > 0):
                 if((p1moveX_finish - p1pieceX_start) > 0) and ((plmoveY_finish - plpieceY_start) > 0):
-                   for space in range(1, (abs(p1moveX_finish - p1pieceX_start) - 1)):
+                   for space in range(1, (abs(p1moveX_finish - p1pieceX_start))):
                        if cBoardData[p1pieceX_start + space][plpieceY_start + space][0] == "W" or cBoardData[p1pieceX_start + space][plpieceY_start + space][0] == "B":
                            blocked = True
                 elif((p1moveX_finish - p1pieceX_start) > 0) and ((plmoveY_finish - plpieceY_start) < 0):
-                   for space in range(1, (abs(p1moveX_finish - p1pieceX_start) - 1)):
+                   for space in range(1, (abs(p1moveX_finish - p1pieceX_start))):
                        if cBoardData[p1pieceX_start + space][plpieceY_start - space][0] == "W" or cBoardData[p1pieceX_start + space][plpieceY_start - space][0] == "B":
                            blocked = True
                 elif((p1moveX_finish - p1pieceX_start) < 0) and ((plmoveY_finish - plpieceY_start) > 0):
-                   for space in range(1, (abs(p1moveX_finish - p1pieceX_start) - 1)):
+                   for space in range(1, (abs(p1moveX_finish - p1pieceX_start))):
                        if cBoardData[p1pieceX_start - space][plpieceY_start + space][0] == "W" or cBoardData[p1pieceX_start - space][plpieceY_start + space][0] == "B":
                            blocked = True
                 elif((p1moveX_finish - p1pieceX_start) < 0) and ((plmoveY_finish - plpieceY_start) < 0):
-                   for space in range(1, (abs(p1moveX_finish - p1pieceX_start) - 1)):
+                   for space in range(1, (abs(p1moveX_finish - p1pieceX_start))):
                        if cBoardData[p1pieceX_start - space][plpieceY_start - space][0] == "W" or cBoardData[p1pieceX_start - space][plpieceY_start - space][0] == "B":
                            blocked = True
                 else:
@@ -298,33 +294,24 @@ def main():
 
         can_the_piece_move = False
 
-        while can_the_piece_move == False:
-            if piece[1] == "R":
-                can_the_piece_move = rook(p1pieceX_start, plpieceY_start, p1moveX_finish, plmoveY_finish)
-                if can_the_piece_move == False:
-                    break
-            elif piece[1] == "B":
-                can_the_piece_move = bishop(p1pieceX_start, plpieceY_start, p1moveX_finish, plmoveY_finish)
-                if can_the_piece_move == False:
-                    break
-            elif piece[1] == "K" and piece[2] == "n":
-                can_the_piece_move = knight(p1pieceX_start, plpieceY_start, p1moveX_finish, plmoveY_finish)
-                if can_the_piece_move == False:
-                    break
-            elif piece[1] == "K" and piece[2] == "i":
-                can_the_piece_move = king(p1pieceX_start, plpieceY_start, p1moveX_finish, plmoveY_finish)
-                if can_the_piece_move == False:
-                    break
-            elif piece[1] == "P":
-                can_the_piece_move = pawn(p1pieceX_start, plpieceY_start, p1moveX_finish, plmoveY_finish)
-                if can_the_piece_move == False:
-                    break
-            elif piece[1] == "Q":
-                can_the_piece_move = queen(p1pieceX_start, plpieceY_start, p1moveX_finish, plmoveY_finish)
-                if can_the_piece_move == False:
-                    break
+        if piece[1] == "R":
+            can_the_piece_move = rook(p1pieceX_start, plpieceY_start, p1moveX_finish, plmoveY_finish)
+        elif piece[1] == "B":
+            can_the_piece_move = bishop(p1pieceX_start, plpieceY_start, p1moveX_finish, plmoveY_finish)
+        elif piece[1] == "K" and piece[2] == "n":
+            can_the_piece_move = knight(p1pieceX_start, plpieceY_start, p1moveX_finish, plmoveY_finish)
+        elif piece[1] == "K" and piece[2] == "i":
+            can_the_piece_move = king(p1pieceX_start, plpieceY_start, p1moveX_finish, plmoveY_finish)
+        elif piece[1] == "P":
+            can_the_piece_move = pawn(p1pieceX_start, plpieceY_start, p1moveX_finish, plmoveY_finish)
+            if (abs(p1moveX_finish - p1pieceX_start) > 0) and cBoardData[p1moveX_finish][plmoveY_finish][0] == " ":
+                can_the_piece_move = False
             else:
-                print("Sorry, not sure what piece you're moving. Blame Ryan")
+                pass
+        elif piece[1] == "Q":
+            can_the_piece_move = queen(p1pieceX_start, plpieceY_start, p1moveX_finish, plmoveY_finish)
+        else:
+            print("Sorry, not sure what piece you're moving. Blame Ryan")
 
         
 
