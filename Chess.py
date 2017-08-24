@@ -1,3 +1,5 @@
+import os
+
 
 #Write a function for each piece type that takes two cooridinates and checks to see if it is a legal move
 
@@ -37,15 +39,11 @@ def pawn(sx, sy, fx, fy):
     elif((sy) == 6 and (fy - sy) == -2)and ((fx - sx) == 0):
         return True
     elif(((fx- sx) == 1 and ((fy - sy) == 1 or (fy - sy) == -1))):
-        if cBoardData[fx][fy][0] == "W" or cBoardData[fx][fy][0] == "B":
           return True
-        else:
-          return False
     elif(((fx- sx) == -1 and ((fy - sy) == 1 or (fy - sy) == -1))):
-        if cBoardData[fx][fy][0] == "W" or cBoardData[fx][fy][0] == "B":
           return True
-        else:
-          return False
+    else:
+        return False
 
 def rook(sx, sy, fx, fy):
     if((fx - sx) > -7 and (fy- sy) == 0):
@@ -68,9 +66,20 @@ def bishop(sx, sy, fx, fy):
         return False
 
 def queen(sx , sy, fx, fy):
-    # Boss Bitch
-    #if(((fy - sy) < 0) and ((fx - sx) == 0 or (fx - sx) ==
-    pass
+    if (fx- sx) == 0:
+        return True
+    elif (fy - sy) == 0:
+        return True
+    elif((fx - sx) ==  (fy - sy)):
+        return True
+    elif((fx - sx) == -(fy - sy)):
+        return True
+    elif(-(fx - sx) == (fy - sy)):
+        return True
+    elif(-(fx - sx) == -(fy - sy)):
+        return True
+    else:
+        return False
         
           
 
@@ -117,51 +126,217 @@ def start():
 def main():
     print("\t\t Welcome to Ryan and Daniel's Python Chess Game!\n")
     cBoardData = start()
+    is_whites_turn = True
     while(1):
         draw(cBoardData);
         
     
     #Take an input of which posistion piece you want to move
 
-        valid_input = False;
+        valid_input_in = False;
         #Check to see if position is valid i.e is on the board and had a piece there and piece is white piece
-        while(valid_input == False):
-            p1pieceX, plpieceY = [int(x) for x in input("Enter the coordinate of which piece you would like to move (in the form x,y):").split(',')]
-            print(p1pieceX, plpieceY)
-            p1piece = [p1pieceX, plpieceY]
+        while(valid_input_in == False):
+            p1pieceX_start, plpieceY_start = [int(x) for x in input("Enter the coordinate of which piece you would like to move (in the form x,y):").split(',')]
+            p1piece = [p1pieceX_start, plpieceY_start]
             if (p1piece[0] < 0 or p1piece[0] > 7):
                 print( "Invalid Move")
             elif (p1piece[1] < 0 or p1piece[1] > 7):
                 print( "Invalid Move")
             elif (cBoardData[p1piece[0]][p1piece[1]] == "   "):
                 print( "Invalid Move")
-##            elif(cBoardData[p1piece[0]][p1piece[1]][0] == "B"):
-##                print( "Invalid Move")
             else:
-                valid_input = True
+                valid_input_in = True
+
+        piece = cBoardData[p1pieceX_start][plpieceY_start]
+        #print(piece)
+
         
-        valid_input = False
+        
+        valid_input_out = False
     #Get input for where the player wants to move
         
         
-        while(valid_input == False):
-            p1moveX, plmoveY = [int(x) for x in input("Enter the coordinate of which place you would like to move to(in the form x,y):").split(',')]
-            plmove = [p1moveX, plmoveY]
+        while(valid_input_out == False):
+            p1moveX_finish, plmoveY_finish = [int(x) for x in input("Enter the coordinate of which place you would like to move to(in the form x,y):").split(',')]
+            plmove = [p1moveX_finish, plmoveY_finish]
             if (plmove[0] < 0 or plmove[0] > 7):
                 print( "Invalid Move")
             elif (plmove[1] < 0 or plmove[1] > 7):
                 print( "Invalid Move")
-            elif(cBoardData[plmove[0]][plmove[1]][0] == "W" or [plmove[1]][0] == "B"):
-                print( "Invalid Move")
+            elif(cBoardData[plmove[0]][plmove[1]][0] == "W"):
+                if is_whites_turn == True:
+                    print("You can't take your own piece!")
+                else:
+                    valid_input_out = True
+            elif(cBoardData[plmove[0]][plmove[1]][0] == "B"):
+                if is_whites_turn == False:
+                    print("You can't take your own piece!")
+                else:
+                    valid_input_out = True
             else:
-                valid_input = True
+                valid_input_out = True
+
+        #Checks if pieces are in the way.
+
+        blocked = False
+
+        if piece[1] == "R":
+            if ((p1moveX_finish - p1pieceX_start) > 0 or (p1moveX_finish - p1pieceX_start < 0)):
+                for x in range(1,(abs(p1moveX_finish - p1pieceX_start))):
+                    if cBoardData[p1pieceX_start + x][plpieceY_start][0] == "W" or cBoardData[p1pieceX_start + x][plpieceY_start][0] =="B":
+                        blocked = True
+                    elif cBoardData[p1pieceX_start - x][plpieceY_start][0] == "W" or cBoardData[p1pieceX_start - x][plpieceY_start][0] =="B":
+                        blocked = True
+            elif ((plmoveY_finish - plpieceY_start) > 0) or ((plmoveY_finish - plpieceY_start) < 0):
+                for x in range( 1,(abs(plmoveY_finish - plpieceY_start))):
+                    if ((plmoveY_finish - plpieceY_start) > 0):
+                        if cBoardData[p1pieceX_start][plpieceY_start + x][0] == "W" or cBoardData[p1pieceX_start][plpieceY_start + x][0] =="B":
+                            blocked = True
+                    elif ((plmoveY_finish - plpieceY_start) < 0): 
+                        if cBoardData[p1pieceX_start][plpieceY_start - x][0] == "W" or cBoardData[p1pieceX_start][plpieceY_start - x][0] =="B":
+                            blocked = True
+                
+        if piece[1] == "P":
+            if cBoardData[p1pieceX_start][plpieceY_start + 1][0] != " " and is_whites_turn == True and plpieceY_start == 1:
+                blocked = True
+            elif cBoardData[p1pieceX_start][plpieceY_start - 1][0] != " " and is_whites_turn == False and plpieceY_start == 6:
+                blocked = True
+            elif ((plmoveY_finish - plpieceY_start) > 0) and ((p1moveX_finish - p1pieceX_start) == 0) and cBoardData[p1pieceX_start][plpieceY_start + 1][0] != " ":
+                blocked = True
+            elif ((plmoveY_finish - plpieceY_start) < 0) and ((p1moveX_finish - p1pieceX_start) == 0) and cBoardData[p1pieceX_start][plpieceY_start - 1][0] != " ":
+                blocked = True
+            else:
+                pass
+                
+        if piece[1] == "B":
+           if((p1moveX_finish - p1pieceX_start) > 0) and ((plmoveY_finish - plpieceY_start) > 0):
+               for space in range(1, (abs(p1moveX_finish - p1pieceX_start))):
+                   if cBoardData[p1pieceX_start + space][plpieceY_start + space][0] == "W" or cBoardData[p1pieceX_start + space][plpieceY_start + space][0] == "B":
+                       blocked = True
+           elif((p1moveX_finish - p1pieceX_start) > 0) and ((plmoveY_finish - plpieceY_start) < 0):
+               for space in range(1, (abs(p1moveX_finish - p1pieceX_start))):
+                   if cBoardData[p1pieceX_start + space][plpieceY_start - space][0] == "W" or cBoardData[p1pieceX_start + space][plpieceY_start - space][0] == "B":
+                       blocked = True
+           elif((p1moveX_finish - p1pieceX_start) < 0) and ((plmoveY_finish - plpieceY_start) > 0):
+               for space in range(1, (abs(p1moveX_finish - p1pieceX_start))):
+                   if cBoardData[p1pieceX_start - space][plpieceY_start + space][0] == "W" or cBoardData[p1pieceX_start - space][plpieceY_start + space][0] == "B":
+                       blocked = True
+           elif((p1moveX_finish - p1pieceX_start) < 0) and ((plmoveY_finish - plpieceY_start) < 0):
+               for space in range(1, (abs(p1moveX_finish - p1pieceX_start))):
+                   if cBoardData[p1pieceX_start - space][plpieceY_start - space][0] == "W" or cBoardData[p1pieceX_start - space][plpieceY_start - space][0] == "B":
+                       blocked = True
+           else:
+                pass
+                       
+
+        if piece[1] == "Q":
+            if ((p1moveX_finish - p1pieceX_start) == 0) or ((plmoveY_finish - plpieceY_start) == 0):
+                if ((p1moveX_finish - p1pieceX_start) > 0 or (p1moveX_finish - p1pieceX_start < 0)):
+                    for x in range(1,(abs(p1moveX_finish - p1pieceX_start))):
+                        if cBoardData[p1pieceX_start + x][plpieceY_start][0] == "W" or cBoardData[p1pieceX_start + x][plpieceY_start][0] =="B":
+                            blocked = True
+                        elif cBoardData[p1pieceX_start - x][plpieceY_start][0] == "W" or cBoardData[p1pieceX_start - x][plpieceY_start][0] =="B":
+                            blocked = True
+                elif ((plmoveY_finish - plpieceY_start) > 0) or ((plmoveY_finish - plpieceY_start) < 0):
+                    for x in range( 1,(abs(plmoveY_finish - plpieceY_start))):
+                        if ((plmoveY_finish - plpieceY_start) > 0):
+                            if cBoardData[p1pieceX_start][plpieceY_start + x][0] == "W" or cBoardData[p1pieceX_start][plpieceY_start + x][0] =="B":
+                                print(x)
+                                blocked = True
+                        elif ((plmoveY_finish - plpieceY_start) < 0): 
+                            if cBoardData[p1pieceX_start][plpieceY_start - x][0] == "W" or cBoardData[p1pieceX_start][plpieceY_start - x][0] =="B":
+                                print(x)
+                                blocked = True
+                
+            if (abs(p1moveX_finish - p1pieceX_start) > 0):
+                if((p1moveX_finish - p1pieceX_start) > 0) and ((plmoveY_finish - plpieceY_start) > 0):
+                   for space in range(1, (abs(p1moveX_finish - p1pieceX_start))):
+                       if cBoardData[p1pieceX_start + space][plpieceY_start + space][0] == "W" or cBoardData[p1pieceX_start + space][plpieceY_start + space][0] == "B":
+                           blocked = True
+                elif((p1moveX_finish - p1pieceX_start) > 0) and ((plmoveY_finish - plpieceY_start) < 0):
+                   for space in range(1, (abs(p1moveX_finish - p1pieceX_start))):
+                       if cBoardData[p1pieceX_start + space][plpieceY_start - space][0] == "W" or cBoardData[p1pieceX_start + space][plpieceY_start - space][0] == "B":
+                           blocked = True
+                elif((p1moveX_finish - p1pieceX_start) < 0) and ((plmoveY_finish - plpieceY_start) > 0):
+                   for space in range(1, (abs(p1moveX_finish - p1pieceX_start))):
+                       if cBoardData[p1pieceX_start - space][plpieceY_start + space][0] == "W" or cBoardData[p1pieceX_start - space][plpieceY_start + space][0] == "B":
+                           blocked = True
+                elif((p1moveX_finish - p1pieceX_start) < 0) and ((plmoveY_finish - plpieceY_start) < 0):
+                   for space in range(1, (abs(p1moveX_finish - p1pieceX_start))):
+                       if cBoardData[p1pieceX_start - space][plpieceY_start - space][0] == "W" or cBoardData[p1pieceX_start - space][plpieceY_start - space][0] == "B":
+                           blocked = True
+                else:
+                    pass
+                    
+                
+            
 
 
-    #Move Piece in cBoardData
-        piece_to_move = cBoardData[p1pieceX][plpieceY]
-        cBoardData[p1pieceX][plpieceY] = "   "
-        cBoardData[p1moveX][plmoveY] = piece_to_move
-    #Draw board
+        #Checks is the right color is moving
+
+        correct_color_moving = False
+        
+        if is_whites_turn == True:
+            if cBoardData[p1pieceX_start][plpieceY_start][0] == "W":
+                correct_color_moving = True
+            else:
+                pass
+        if is_whites_turn == False:
+            if cBoardData[p1pieceX_start][plpieceY_start][0] == "B":
+                correct_color_moving = True
+            else:
+                pass
+            
+            
+                
+
+        #Checks the legality of the attempted move against the pieces mobility
+
+        can_the_piece_move = False
+
+        if piece[1] == "R":
+            can_the_piece_move = rook(p1pieceX_start, plpieceY_start, p1moveX_finish, plmoveY_finish)
+        elif piece[1] == "B":
+            can_the_piece_move = bishop(p1pieceX_start, plpieceY_start, p1moveX_finish, plmoveY_finish)
+        elif piece[1] == "K" and piece[2] == "n":
+            can_the_piece_move = knight(p1pieceX_start, plpieceY_start, p1moveX_finish, plmoveY_finish)
+        elif piece[1] == "K" and piece[2] == "i":
+            can_the_piece_move = king(p1pieceX_start, plpieceY_start, p1moveX_finish, plmoveY_finish)
+        elif piece[1] == "P":
+            can_the_piece_move = pawn(p1pieceX_start, plpieceY_start, p1moveX_finish, plmoveY_finish)
+            if (abs(p1moveX_finish - p1pieceX_start) > 0) and cBoardData[p1moveX_finish][plmoveY_finish][0] == " ":
+                can_the_piece_move = False
+            else:
+                pass
+        elif piece[1] == "Q":
+            can_the_piece_move = queen(p1pieceX_start, plpieceY_start, p1moveX_finish, plmoveY_finish)
+        else:
+            print("Sorry, not sure what piece you're moving. Blame Ryan")
+
+        
+
+                   
+
+    #Move Piece in cBoardData if allowed
+
+        ###  Clear the screen to remove the clutter.
+        #### This doesn't work in the shell, only cmd prompt.
+        #os.system('cls')
+
+        if can_the_piece_move == False:
+            print("\n\n\n Sorry! I don't think you can move like that. \n\n\n")
+        elif correct_color_moving == False:
+            print("Dude, it's not your turn")
+        elif blocked == True:
+            print("Sorry, you've got a piece in your way.")
+        elif can_the_piece_move == True and correct_color_moving == True and blocked == False:
+            piece_to_move = cBoardData[p1pieceX_start][plpieceY_start]
+            cBoardData[p1pieceX_start][plpieceY_start] = "   "
+            cBoardData[p1moveX_finish][plmoveY_finish] = piece_to_move
+            is_whites_turn = not(is_whites_turn)
+        else:
+            print("Sorry. Something about that move just aint right")
+    #Draws board at start of loop
     
 
 main()
