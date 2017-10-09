@@ -38,10 +38,12 @@ def pawn(sx, sy, fx, fy):
         return True
     elif((sy) == 6 and (fy - sy) == -2)and ((fx - sx) == 0):
         return True
-    elif(((fx- sx) == 1 and ((fy - sy) == 1 or (fy - sy) == -1))):
-          return True
-    elif(((fx- sx) == -1 and ((fy - sy) == 1 or (fy - sy) == -1))):
-          return True
+    #elif((fx - sx) == 1 and (fy - sy) == 1):
+    #Check for opposing piece
+    #      return True
+    #elif((fx - sx) == -1 and (fy - sy) == 1):
+    #      return True
+    #Check for opposing piece
     else:
         return False
 
@@ -80,6 +82,29 @@ def queen(sx , sy, fx, fy):
         return True
     else:
         return False
+
+def king_in_check(cBoardData,sx,sy):
+    #Get color of piece
+
+    #Loop through all other opposing team pieces and see if they can move to kings spot
+    
+    return false
+
+
+def king(cBoardData,sx,sy,fx,fy):
+    #Check that the move is only one spot
+
+
+    
+    #Create Copy of Current Board;
+
+
+    #In copy move the king
+
+
+
+    if(king_in_check(cBoardData,sx,sy) == False):
+        return True
         
           
 
@@ -122,7 +147,7 @@ def start():
         cBoardData[p][6] = "BP " 
     return cBoardData
     
-def check_block(cBoardData, piece, p1pieceX_start, plpieceY_start, p1moveX_finish, plmoveY_finish):
+def check_block(cBoardData, piece, p1pieceX_start, plpieceY_start, p1moveX_finish, plmoveY_finish, is_whites_turn):
     blocked = False
 
     if piece[1] == "R":
@@ -234,11 +259,11 @@ def main():
             elif (piece[0] == "W" and is_whites_turn == False):
                 print("Dude...not your piece")
             elif (p1piece[0] < 0 or p1piece[0] > 7):
-                print( "Invalid Move")
+                print( "Invalid Piece")
             elif (p1piece[1] < 0 or p1piece[1] > 7):
-                print( "Invalid Move")
+                print( "Invalid Piece")
             elif (cBoardData[p1piece[0]][p1piece[1]] == "   "):
-                print( "Invalid Move")
+                print( "Invalid Piece")
             else:
                 valid_input_in = True
         #print(piece)
@@ -271,7 +296,7 @@ def main():
 
         #Checks if pieces are in the way.
 
-        blocked = check_block(cBoardData, piece, p1pieceX_start, plpieceY_start, p1moveX_finish, plmoveY_finish)
+        blocked = check_block(cBoardData, piece, p1pieceX_start, plpieceY_start, p1moveX_finish, plmoveY_finish,is_whites_turn)
         
             
                 
@@ -311,20 +336,14 @@ def main():
 
         if can_the_piece_move == False:
             print("\n\n\n Sorry! I don't think you can move like that. \n\n\n")
-        elif correct_color_moving == False:
-            print("Dude, it's not your turn")
         elif blocked == True:
-            print("Sorry, you've got a piece in your way.")
-        elif can_the_piece_move == True and correct_color_moving == True and blocked == False:
+            print("\n\n\n Sorry, you've got a piece in your way.\n\n\n")
+        else:
             piece_to_move = cBoardData[p1pieceX_start][plpieceY_start]
             cBoardData[p1pieceX_start][plpieceY_start] = "   "
             cBoardData[p1moveX_finish][plmoveY_finish] = piece_to_move
             is_whites_turn = not(is_whites_turn)
-        else:
-            print("Sorry. Something about that move just aint right")
     #Draws board at start of loop
     
 
 main()
-    
-
