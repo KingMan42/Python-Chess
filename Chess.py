@@ -1,5 +1,17 @@
 import os
 
+#To Do:
+## Finish Pawn movement/taking other pieces.
+## Create a way to keep track of what pieces have been taken.
+## Finish the king check function
+## A lot
+
+
+#Finished Functions (that need testing):
+##Knight
+##Bishop
+##Rook
+
 
 #Write a function for each piece type that takes two cooridinates and checks to see if it is a legal move
 
@@ -48,21 +60,15 @@ def pawn(sx, sy, fx, fy):
         return False
 
 def rook(sx, sy, fx, fy):
-    if((fx - sx) > -7 and (fy- sy) == 0):
+    if((fx - sx) != 0 (fy - sy) == 0):
         return True
-    elif((fx - sx) == 0 and (fy-sy) > -7):
+    elif((fx - sx) == 0 and (fy - sy) != 0):
         return True
     else:
         return False
 
 def bishop(sx, sy, fx, fy):
-    if((fx - sx) ==  (fy - sy)):
-        return True
-    elif((fx - sx) == -(fy - sy)):
-        return True
-    elif(-(fx - sx) == (fy - sy)):
-        return True
-    elif(-(fx - sx) == -(fy - sy)):
+    if(abs(fx - sx) ==  abs(fy - sy)):
         return True
     else:
         return False
@@ -83,27 +89,41 @@ def queen(sx , sy, fx, fy):
     else:
         return False
 
-def king_in_check(cBoardData,sx,sy):
+def king_in_check(cBoardData,kx,ky):
     #Get color of piece
-
+    colour = cBoardData[kx][ky][0]
     #Loop through all other opposing team pieces and see if they can move to kings spot
+        for n in range(8):
+            for m in range(8):
+                if(cBoardData[n][m][0] != colour):
+                    can_the_piece_move = valid_move(cBoardData[n][m], n, m, kx, ky)
+                    
+                    
+                    
     
-    return false
 
 
 def king(cBoardData,sx,sy,fx,fy):
     #Check that the move is only one spot
-
+    oneSpot = False
+    
+    if(abs(fx-sx) <= 1):
+        if(abs(fy-sy) <= 1):
+            oneSpot = True
 
     
     #Create Copy of Current Board;
-
+    cBoardCopy = cBoardData
+    
 
     #In copy move the king
+    cBoardCopy
+    king = cBoardData[sx][sy]
+    cBoardCopy[sx][sy] = "   "
+    cBoardCopy[fx][fy] = king
 
 
-
-    if(king_in_check(cBoardData,sx,sy) == False):
+    if(king_in_check(cBoardCopy,fx,fy) == False):
         return True
         
           
@@ -149,10 +169,11 @@ def start():
     
 def check_block(cBoardData, piece, p1pieceX_start, plpieceY_start, p1moveX_finish, plmoveY_finish, is_whites_turn):
     blocked = False
-
+#If Rook
     if piece[1] == "R":
         if ((p1moveX_finish - p1pieceX_start) != 0):
             for x in range(1,(abs(p1moveX_finish - p1pieceX_start))):
+                #Can we change this to just (if cboardData... != " ")?
                 if cBoardData[p1pieceX_start + x][plpieceY_start][0] == "W" or cBoardData[p1pieceX_start + x][plpieceY_start][0] =="B":
                     blocked = True
                 elif cBoardData[p1pieceX_start - x][plpieceY_start][0] == "W" or cBoardData[p1pieceX_start - x][plpieceY_start][0] =="B":
@@ -160,12 +181,13 @@ def check_block(cBoardData, piece, p1pieceX_start, plpieceY_start, p1moveX_finis
         elif ((plmoveY_finish - plpieceY_start) != 0):
             for x in range( 1,(abs(plmoveY_finish - plpieceY_start))):
                 if ((plmoveY_finish - plpieceY_start) > 0):
+                    #Same as above. Plus shouldnt this be "+ y" and not "+ x" 
                     if cBoardData[p1pieceX_start][plpieceY_start + x][0] == "W" or cBoardData[p1pieceX_start][plpieceY_start + x][0] =="B":
                         blocked = True
                 elif ((plmoveY_finish - plpieceY_start) < 0): 
                     if cBoardData[p1pieceX_start][plpieceY_start - x][0] == "W" or cBoardData[p1pieceX_start][plpieceY_start - x][0] =="B":
                         blocked = True
-                
+#If Pawn               
     if piece[1] == "P":
         if cBoardData[p1pieceX_start][plpieceY_start + 1][0] != " " and is_whites_turn == True and plpieceY_start == 1:
             blocked = True
@@ -177,7 +199,7 @@ def check_block(cBoardData, piece, p1pieceX_start, plpieceY_start, p1moveX_finis
             blocked = True
         else:
             pass
-                
+#If bishop                
     if piece[1] == "B":
         if((p1moveX_finish - p1pieceX_start) > 0) and ((plmoveY_finish - plpieceY_start) > 0):
             for space in range(1, (abs(p1moveX_finish - p1pieceX_start))):
@@ -198,7 +220,7 @@ def check_block(cBoardData, piece, p1pieceX_start, plpieceY_start, p1moveX_finis
         else:
             pass
                        
-
+#If Queen
     if piece[1] == "Q":
         if ((p1moveX_finish - p1pieceX_start) == 0) or ((plmoveY_finish - plpieceY_start) == 0):
             if ((p1moveX_finish - p1pieceX_start) > 0 or (p1moveX_finish - p1pieceX_start < 0)):
@@ -238,6 +260,30 @@ def check_block(cBoardData, piece, p1pieceX_start, plpieceY_start, p1moveX_finis
             else:
                 pass
     return blocked
+
+
+def valid_move(piece, p1pieceX_start, p1pieceY_start, p1pieceX_finish, p1pieceY_finish):
+    
+    if piece[1] == "R":
+            can_the_piece_move = rook(p1pieceX_start, plpieceY_start, p1moveX_finish, plmoveY_finish)
+        elif piece[1] == "B":
+            can_the_piece_move = bishop(p1pieceX_start, plpieceY_start, p1moveX_finish, plmoveY_finish)
+        elif piece[1] == "K" and piece[2] == "n":
+            can_the_piece_move = knight(p1pieceX_start, plpieceY_start, p1moveX_finish, plmoveY_finish)
+        elif piece[1] == "K" and piece[2] == "i":
+            can_the_piece_move = king(p1pieceX_start, plpieceY_start, p1moveX_finish, plmoveY_finish)
+        elif piece[1] == "P":
+            can_the_piece_move = pawn(p1pieceX_start, plpieceY_start, p1moveX_finish, plmoveY_finish)
+        elif piece[1] == "Q":
+            can_the_piece_move = queen(p1pieceX_start, plpieceY_start, p1moveX_finish, plmoveY_finish)
+        else:
+            print("Sorry, not sure what piece you're moving. Blame Ryan")
+
+
+    return can_the_piece_move
+
+
+
 def main():
     print("\t\t Welcome to Ryan and Daniel's Python Chess Game!\n")
     cBoardData = start()
@@ -302,27 +348,8 @@ def main():
                 
 
         #Checks the legality of the attempted move against the pieces mobility
-
-        can_the_piece_move = False
-
-        if piece[1] == "R":
-            can_the_piece_move = rook(p1pieceX_start, plpieceY_start, p1moveX_finish, plmoveY_finish)
-        elif piece[1] == "B":
-            can_the_piece_move = bishop(p1pieceX_start, plpieceY_start, p1moveX_finish, plmoveY_finish)
-        elif piece[1] == "K" and piece[2] == "n":
-            can_the_piece_move = knight(p1pieceX_start, plpieceY_start, p1moveX_finish, plmoveY_finish)
-        elif piece[1] == "K" and piece[2] == "i":
-            can_the_piece_move = king(p1pieceX_start, plpieceY_start, p1moveX_finish, plmoveY_finish)
-        elif piece[1] == "P":
-            can_the_piece_move = pawn(p1pieceX_start, plpieceY_start, p1moveX_finish, plmoveY_finish)
-            if (abs(p1moveX_finish - p1pieceX_start) > 0) and cBoardData[p1moveX_finish][plmoveY_finish][0] == " ":
-                can_the_piece_move = False
-            else:
-                pass
-        elif piece[1] == "Q":
-            can_the_piece_move = queen(p1pieceX_start, plpieceY_start, p1moveX_finish, plmoveY_finish)
-        else:
-            print("Sorry, not sure what piece you're moving. Blame Ryan's bitch ass")
+        can_the_piece_move = valid_move(piece, p1pieceX_start, p1pieceY_start, p1pieceX_finish, p1pieceY_finish)
+       
 
         
 
