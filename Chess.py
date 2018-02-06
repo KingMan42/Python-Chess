@@ -1,6 +1,7 @@
 import os
 
 #To Do:
+## CLEAN CODE
 ## Finish Pawn movement/taking other pieces.
 ## Create a way to keep track of what pieces have been taken.
 ## Finish the king check function
