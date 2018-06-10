@@ -4,7 +4,7 @@
 #****************************************************************
 
 
-def knight(sx,sy,fx,fy):
+def knight(sx,sy,fx,fy,):
     if (abs(fx - sx) == 1 and abs(fy - sy) == 2):
         return True
     elif (abs(fx - sx) == 2 and abs(fy - sy) == 1):
@@ -13,14 +13,23 @@ def knight(sx,sy,fx,fy):
         return False
 
 
-def pawn(sx, sy, fx, fy):
-    if((fx - sx) == 0 and abs(fy - sy) == 1):
+def pawn(sx, sy, fx, fy, is_whites_turn, cBoardData):
+    if((fx - sx) == 0 and (fy - sy) == 1 and is_whites_turn == True):
+        return True
+    elif((fx - sx) == 0 and (fy - sy) == -1 and is_whites_turn == False):
         return True
     elif((sy) == 1 and (fy - sy) == 2) and ((fx - sx) == 0):
         return True
     elif((sy) == 6 and (fy - sy) == -2)and ((fx - sx) == 0):
         return True
-    #Add check for diagnal move if opposing piece there. 
+    #Add check for diagnal move if opposing piece there. and NOT backwards
+    elif(abs(fx - sx) == 1 and abs(fy - sy) == 1 and cBoardData[fx][fy] != "   "):
+        if(is_whites_turn == True and (fy - sy) == 1):
+            return True
+        elif(is_whites_turn == False and (fy - sy) == -1):
+            return True
+        else:
+            return False
     else:
         return False
 
@@ -96,7 +105,7 @@ def king_in_check(cBoardData,kx,ky, is_whites_turn):
                 #cBoardData, piece, plpieceX_start, plpieceY_start, plmoveX_finish, plmoveY_finish,is_whites_turn
              
 #Encapsating function to check if a piece can move based on a pieces rules.
-def valid_move(piece, plpieceX_start, plpieceY_start, plmoveX_finish, plmoveY_finish, is_whites_turn):
+def valid_move(piece, plpieceX_start, plpieceY_start, plmoveX_finish, plmoveY_finish, is_whites_turn, cBoardData):
     
     if piece[1] == "R":
             can_the_piece_move = rook(plpieceX_start, plpieceY_start, plmoveX_finish, plmoveY_finish)
@@ -107,7 +116,7 @@ def valid_move(piece, plpieceX_start, plpieceY_start, plmoveX_finish, plmoveY_fi
     elif piece[1] == "K" and piece[2] == "i":
             can_the_piece_move = king(plpieceX_start, plpieceY_start, plmoveX_finish, plmoveY_finish, is_whites_turn)
     elif piece[1] == "P":
-            can_the_piece_move = pawn(plpieceX_start, plpieceY_start, plmoveX_finish, plmoveY_finish)
+            can_the_piece_move = pawn(plpieceX_start, plpieceY_start, plmoveX_finish, plmoveY_finish, is_whites_turn, cBoardData)
     elif piece[1] == "Q":
             can_the_piece_move = queen(plpieceX_start, plpieceY_start, plmoveX_finish, plmoveY_finish)
     else:
@@ -116,7 +125,7 @@ def valid_move(piece, plpieceX_start, plpieceY_start, plmoveX_finish, plmoveY_fi
 
     return can_the_piece_move
 
-
+#Checks if pawn 
 
 
 #***************************************************

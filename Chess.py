@@ -1,10 +1,12 @@
 import os
 import ChessPieces as CP
 #To Do:
-## Add ability for pawn to take pieces
-## Create a way to keep track of what pieces have been taken.
 ## Finish the king check function
+## Increase ability of exception handling. Allow an input such HELP to bring up menu.
 
+#Check Ryan's Work:
+## Pawn taking pieces
+## Global Variable (Or because it's in our main loop it's okay?) of capturedPieces
 
 '''
 Bugs:
@@ -71,6 +73,7 @@ def main():
     print("\t\t Welcome to Ryan and Daniel's Python Chess Game!\n")
     cBoardData = start()
     is_whites_turn = True
+    piecesCaptured = []
     #Game Loop
     while(1):
         draw(cBoardData);
@@ -83,7 +86,10 @@ def main():
 
         #Check to see if input and output are legal
         while(valid_input_in == False and valid_input_out == False):
-            plpieceX_start, plpieceY_start = [int(x) for x in input("Enter the coordinate of which piece you would like to move (in the form x,y):").split(',')]
+            try:
+                plpieceX_start, plpieceY_start = [int(x) for x in input("Enter the coordinate of which piece you would like to move (in the form x,y):").split(',')]
+            except ValueError:
+                print("\nSorry, but that format doesn't look right, try again. If you would like to quit, Press ctrl + C. \n")
             plpiece = [plpieceX_start, plpieceY_start]
             piece = cBoardData[plpieceX_start][plpieceY_start]
             if (piece[0] == "B" and is_whites_turn == True):
@@ -130,7 +136,7 @@ def main():
         
 
         #Checks the legality of the attempted move against the pieces mobility
-        can_the_piece_move = CP.valid_move(piece, plpieceX_start, plpieceY_start, plmoveX_finish, plmoveY_finish, is_whites_turn)
+        can_the_piece_move = CP.valid_move(piece, plpieceX_start, plpieceY_start, plmoveX_finish, plmoveY_finish, is_whites_turn, cBoardData)
        
 
     
@@ -150,6 +156,11 @@ def main():
         else:
             piece_to_move = cBoardData[plpieceX_start][plpieceY_start]
             cBoardData[plpieceX_start][plpieceY_start] = "   "
+            #Before finalizing the board, add captured piece to the list
+            if(cBoardData[plmoveX_finish][plmoveY_finish] != "   "):
+                piecesCaptured.append(cBoardData[plmoveX_finish][plmoveY_finish])
+            else:
+                pass
             cBoardData[plmoveX_finish][plmoveY_finish] = piece_to_move
             is_whites_turn = not(is_whites_turn)
     
