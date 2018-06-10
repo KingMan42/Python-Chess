@@ -4,7 +4,7 @@
 #****************************************************************
 
 
-def knight(sx,sy,fx,fy,):
+def knight(sx,sy,fx,fy):
     if (abs(fx - sx) == 1 and abs(fy - sy) == 2):
         return True
     elif (abs(fx - sx) == 2 and abs(fy - sy) == 1):
