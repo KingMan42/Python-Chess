@@ -65,7 +65,9 @@ def start():
         cBoardData[p][6] = "BP " 
     return cBoardData
     
-
+def menu():
+    print("Hello! Welcome to the menu!")
+    
 
 
 
@@ -86,10 +88,20 @@ def main():
 
         #Check to see if input and output are legal
         while(valid_input_in == False and valid_input_out == False):
-            try:
-                plpieceX_start, plpieceY_start = [int(x) for x in input("Enter the coordinate of which piece you would like to move (in the form x,y):").split(',')]
-            except ValueError:
-                print("\nSorry, but that format doesn't look right, try again. If you would like to quit, Press ctrl + C. \n")
+
+            #Handles any inputs that don't exactly match the correct criteria
+            while True:
+                try:
+                    plpieceX_start, plpieceY_start = [int(x) for x in input("Enter the coordinate of which piece you would like to move (in the form x,y):").split(',')]
+                except ValueError:
+                    print("""\nSorry, but that format doesn't look right, try again. Press ctrl + C to quit. \n""")
+                except KeyboardInterrupt:
+                    print("Goodbye, world!")
+                    quit()
+                else:
+                    break
+
+            #Checks you input against the board to make sure it was okay
             plpiece = [plpieceX_start, plpieceY_start]
             piece = cBoardData[plpieceX_start][plpieceY_start]
             if (piece[0] == "B" and is_whites_turn == True):
