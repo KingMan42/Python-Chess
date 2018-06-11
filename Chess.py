@@ -2,11 +2,12 @@ import os
 import ChessPieces as CP
 #To Do:
 ## Finish the king check function
-## Increase ability of exception handling. Allow an input such HELP to bring up menu.
+
 
 #Check Ryan's Work:
 ## Pawn taking pieces
 ## Global Variable (Or because it's in our main loop it's okay?) of capturedPieces
+
 
 '''
 Bugs:
@@ -119,7 +120,20 @@ def main():
 
             #If input is good check output
             if(valid_input_in == True):
-                plmoveX_finish, plmoveY_finish = [int(x) for x in input("Enter the coordinate of which place you would like to move to(in the form x,y):").split(',')]
+
+                #Does the same error handling as the input
+                while True:
+                    try:
+                        plmoveX_finish, plmoveY_finish = [int(x) for x in input("Enter the coordinate of which place you would like to move to(in the form x,y):").split(',')]
+                    except ValueError:
+                        print("""\nSorry, but that format doesn't look right, try again. Press ctrl + C to quit. \n""")
+                    except KeyboardInterrupt:
+                        print("Goodbye, world!")
+                        quit()
+                    else:
+                        break
+
+                #Checks you output against a few possible erroneous moves (Moving piece off the board, and capturing your own piece.)
                 plmove = [plmoveX_finish, plmoveY_finish]
                 if (plmove[0] < 0 or plmove[0] > 7):
                     print( "Invalid Move")
